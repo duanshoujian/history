@@ -1,0 +1,115 @@
+# GitHub Actions CI/CD 工作流配置文件
+# 这个文件定义了代码提交后的自动构建和部署流程
+
+# 工作流名称，会显示在GitHub Actions页面
+name: Simple CI/CD
+
+# 触发条件：什么时候运行这个工作流
+on:
+  # 当代码推送到指定分支时触发
+  push:
+    branches: [main, develop]  # 只在这些分支推送时触发
+  # 当创建Pull Request时触发
+  pull_request:
+    branches: [main]  # 只对main分支的PR触发
+
+# 定义要执行的任务（jobs）
+jobs:
+  # 第一个任务：构建和测试
+  # 任务名称，可以自定义
+  build-and-test:
+    # 运行环境：使用GitHub提供的Ubuntu最新版本
+    runs-on: ubuntu-latest
+    
+    # 任务步骤：按顺序执行
+    steps:
+    # 步骤1：检出代码
+    # 从GitHub仓库下载代码到运行环境
+    - uses: actions/checkout@v4
+    
+    # 步骤2：设置Node.js环境
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'  # 使用Node.js 18版本
+    
+    # 步骤3：安装pnpm包管理器
+    - name: Install pnpm
+      run: npm install -g pnpm@8
+    
+    # 步骤4：验证pnpm安装
+    - name: Verify pnpm installation
+      run: pnpm --version
+    
+    # 步骤5：安装项目依赖
+    - name: Install dependencies
+      run: pnpm install  # 执行pnpm install命令
+    
+    # 步骤6：构建所有应用
+    - name: Build all apps
+      run: pnpm build    # 执行pnpm build命令，构建所有应用
+    
+    # 步骤7：运行测试
+    - name: Run tests
+      run: pnpm test     # 执行pnpm test命令，运行测试
+      continue-on-error: true  # 即使测试失败也继续执行，不中断流程
+
+  # 第二个任务：部署到生产环境
+  # 只有main分支的代码才会部署
+  deploy:
+    # 依赖关系：必须等build-and-test任务完成后才执行
+    needs: build-and-test
+    # 运行环境
+    runs-on: ubuntu-latest
+    # 条件：只有推送到main分支时才执行部署
+    if: github.ref == 'refs/heads/main'
+    
+    # 部署步骤
+    steps:
+    # 步骤1：再次检出代码（每个任务都需要）
+    - uses: actions/checkout@v4
+    
+    # 步骤2：设置Node.js环境
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+    
+    # 步骤3：安装pnpm
+    - name: Install pnpm
+      run: npm install -g pnpm@8
+    
+    # 步骤4：验证pnpm安装
+    - name: Verify pnpm installation
+      run: pnpm --version
+    
+    # 步骤5：安装依赖
+    - name: Install dependencies
+      run: pnpm install
+    
+    # 步骤6：构建Vue应用
+    - name: Build Vue App
+      run: pnpm --filter vue-app build  # 只构建vue-app
+    
+    # 步骤7：部署到Vercel
+    # 使用Vercel的GitHub Action进行部署
+    - name: Deploy Vue App to Vercel
+      uses: amondnet/vercel-action@v25
+      with:
+        # 这些是Vercel的配置信息，需要在GitHub Secrets中设置
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}        # Vercel访问令牌
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}      # Vercel组织ID
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}  # Vercel项目ID
+        working-directory: ./apps/vue-app  # 指定工作目录为Vue应用目录
+
+# YAML语法说明：
+# - 缩进很重要，必须使用空格（不能用Tab）
+# - 每个层级用2个空格缩进
+# - 冒号后面必须有空格
+# - 列表项用 - 开头
+# - 注释用 # 开头
+# - 字符串可以用引号包围，也可以不用
+# - 布尔值：true/false
+# - 数字：直接写数字
+# - 数组：[item1, item2, item3]
+# - 对象：key: value

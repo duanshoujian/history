@@ -1,27 +1,27 @@
 import { Collection, ObjectId } from 'mongodb';
 import { getCollection } from '../mongodb/connection';
-import { Article, ArticleQuery } from '@monorepo/shared';
+// import { Article, ArticleQuery } from '@monorepo/shared';
 
 export class ArticleMapper {
-  private collection: Collection<Article>;
+  private collection: Collection<any>;
 
   constructor() {
-    this.collection = getCollection<Article>('articles');
+    this.collection = getCollection<any>('articles');
   }
 
-  async findById(id: string): Promise<Article | null> {
+  async findById(id: string): Promise<any | null> {
     return this.collection.findOne({ _id: new ObjectId(id) });
   }
 
-  async findByPersonId(personId: string): Promise<Article> {
+  async findByPersonId(personId: string): Promise<any> {
     return this.collection.findOne({ personId: new ObjectId(personId) });
   }
 
-  async findByDynastyId(dynastyId: string): Promise<Article[]> {
+  async findByDynastyId(dynastyId: string): Promise<any[]> {
     return this.collection.find({ dynastyId: new ObjectId(dynastyId) }).toArray();
   }
 
-  async find(query: ArticleQuery): Promise<Article[]> {
+  async find(query: any): Promise<any[]> {
     const filter: any = {};
     
     if (query.personId) {
@@ -51,12 +51,12 @@ export class ArticleMapper {
       .toArray();
   }
 
-  async create(article: Omit<Article, '_id'>): Promise<Article> {
-    const result = await this.collection.insertOne(article as Article);
-    return { ...article, _id: result.insertedId } as Article;
+  async create(article: Omit<any, '_id'>): Promise<any> {
+    const result = await this.collection.insertOne(article as any);
+    return { ...article, _id: result.insertedId } as any;
   }
 
-  async update(id: string, article: Partial<Article>): Promise<boolean> {
+  async update(id: string, article: Partial<any>): Promise<boolean> {
     const result = await this.collection.updateOne(
       { _id: new ObjectId(id) },
       { $set: { ...article, updatedAt: new Date() } }

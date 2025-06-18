@@ -32,23 +32,24 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '18'  # 使用Node.js 18版本
-        cache: 'pnpm'       # 缓存pnpm依赖，加快后续构建
     
     # 步骤3：安装pnpm包管理器
     - name: Install pnpm
-      uses: pnpm/action-setup@v2
-      with:
-        version: 8  # 使用pnpm 8版本
+      run: npm install -g pnpm@8
     
-    # 步骤4：安装项目依赖
+    # 步骤4：验证pnpm安装
+    - name: Verify pnpm installation
+      run: pnpm --version
+    
+    # 步骤5：安装项目依赖
     - name: Install dependencies
       run: pnpm install  # 执行pnpm install命令
     
-    # 步骤5：构建所有应用
+    # 步骤6：构建所有应用
     - name: Build all apps
       run: pnpm build    # 执行pnpm build命令，构建所有应用
     
-    # 步骤6：运行测试
+    # 步骤7：运行测试
     - name: Run tests
       run: pnpm test     # 执行pnpm test命令，运行测试
       continue-on-error: true  # 即使测试失败也继续执行，不中断流程
@@ -73,23 +74,24 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '18'
-        cache: 'pnpm'
     
     # 步骤3：安装pnpm
     - name: Install pnpm
-      uses: pnpm/action-setup@v2
-      with:
-        version: 8
+      run: npm install -g pnpm@8
     
-    # 步骤4：安装依赖
+    # 步骤4：验证pnpm安装
+    - name: Verify pnpm installation
+      run: pnpm --version
+    
+    # 步骤5：安装依赖
     - name: Install dependencies
       run: pnpm install
     
-    # 步骤5：构建Vue应用
+    # 步骤6：构建Vue应用
     - name: Build Vue App
       run: pnpm --filter vue-app build  # 只构建vue-app
     
-    # 步骤6：部署到Vercel
+    # 步骤7：部署到Vercel
     # 使用Vercel的GitHub Action进行部署
     - name: Deploy Vue App to Vercel
       uses: amondnet/vercel-action@v25

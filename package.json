@@ -1,0 +1,50 @@
+{
+  "name": "monorepo-project",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:vue": "pnpm --filter vue-app dev",
+    "dev:react": "pnpm --filter react-app dev",
+    "dev:server": "pnpm --filter server dev",
+    "dev": "pnpm run -r dev",
+    "build:vue": "pnpm --filter vue-app build",
+    "build:react": "pnpm --filter react-app build",
+    "build:server": "pnpm --filter server build",
+    "build": "pnpm run -r build",
+    "test:vue": "pnpm --filter vue-app test",
+    "test:react": "pnpm --filter react-app test",
+    "test:server": "pnpm --filter server test",
+    "test": "pnpm run -r test",
+    "lint": "pnpm run -r lint",
+    "type-check": "pnpm run -r type-check",
+    "clean": "pnpm run -r clean",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "prepare": "husky install",
+    "commit": "git-cz",
+    "release": "standard-version"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^18.0.0",
+    "@commitlint/config-conventional": "^18.0.0",
+    "@commitlint/prompt": "^18.0.0",
+    "commitizen": "^4.3.0",
+    "husky": "^8.0.3",
+    "less": "^4.3.0",
+    "standard-version": "^9.5.0",
+    "typescript": "^5.0.0"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "dependencies": {
+    "axios": "^1.9.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "@commitlint/prompt"
+    }
+  }
+}

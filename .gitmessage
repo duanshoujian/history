@@ -1,0 +1,31 @@
+# <type>(<scope>): <subject>
+#
+# <body>
+#
+# <footer>
+
+# Type: 提交类型
+# feat: 新功能
+# fix: 修复bug
+# docs: 文档更新
+# style: 代码格式调整
+# refactor: 代码重构
+# test: 测试相关
+# chore: 构建过程或辅助工具的变动
+
+# Scope: 影响范围
+# vue-app: Vue应用
+# react-app: React应用
+# server: 后端服务
+# shared: 共享包
+# ci: CI/CD配置
+# deps: 依赖更新
+
+# Subject: 简短描述
+# 使用现在时态，首字母小写，不加句号
+
+# Body: 详细描述
+# 说明为什么做这个变更，以及如何做的
+
+# Footer: 关闭Issue
+# Closes #123, Fixes #456 

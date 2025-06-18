@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
-import type { Todo } from '@monorepo/shared';
 import './App.css';
 
 function App() {
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todos, setTodos] = useState<any[]>([]);
   const [newTodo, setNewTodo] = useState('');
 
   useEffect(() => {
